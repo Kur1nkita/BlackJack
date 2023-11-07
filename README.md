@@ -4,6 +4,6 @@ A project in my spare time, and also my first project on github. This is a text-
 PS. This will have European blackjack rules.
 
 Key features "Work in progress":
-- Save previous board records, and display them.
+- Save previous board records, and the ability to display them.
 - Database of players and their amount of money.
 - Support for unlimited amount of splits.
