@@ -23,4 +23,5 @@ from gamefiles.player import Player
 table = Table([Player(1, "Emil", 500), Player(2, "Emily", 500)],
               bets=[[100, False], [100, False]])
 table.game_start()
-print(table)
+for x in table.players:
+    print(x.getMoney())
