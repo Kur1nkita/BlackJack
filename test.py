@@ -21,6 +21,6 @@ from gamefiles.table import Table
 from gamefiles.player import Player
 
 table = Table([Player(1, "Emil", 500), Player(2, "Emily", 500)],
-              [["A", "4", "5"], None, ["K", "A"], ["A", "5", "5"], None, ["5", "5", "K", "A"]],
-              [[100, False], [100, False], [100, True]])
+              bets=[[100, False], [100, False]])
+table.game_start()
 print(table)

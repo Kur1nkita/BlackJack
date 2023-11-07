@@ -7,3 +7,6 @@ class Player:
 
     def getName(self):
         return self.username
+
+    def getMoney(self):
+        return self.money

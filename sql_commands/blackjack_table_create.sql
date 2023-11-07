@@ -21,4 +21,4 @@ CREATE TABLE table_player_id_record (
     PRIMARY KEY (user_id, table_id),
     FOREIGN KEY (user_id) REFERENCES players (user_id),
     FOREIGN KEY (table_id) REFERENCES table_record (table_id)
-)
+);
