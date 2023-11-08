@@ -7,7 +7,7 @@ CREATE TABLE players (
 
 CREATE TABLE table_record (
     table_id serial PRIMARY KEY ,
-    game_state int NOT NULL ,
+    game_state text NOT NULL ,
     game_date date NOT NULL
 );
 

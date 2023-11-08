@@ -20,14 +20,13 @@ def main():
         print("Welcome to the BlackJack game! (If you are stuck, write help)")
         while True:
             command = input().strip().lower()
+            system("cls")
             if command == "help":
-                system("cls")
                 # TODO: replays, replay player, play
                 print("Commands:\n"
                       "play : starts the BlackJack game\n"
                       "players : Shows all the players in the database\n"
                       "add player : adds a player to the database\n"
-                      "delete player : removes a player from the database\n"
                       "restart player : restarts a player balance\n"
                       "replays : shows a list of previous games\n"
                       "replay player : show a list of replays from a spesific player\n"
@@ -38,16 +37,13 @@ def main():
                 cur.execute("""
                 SELECT user_id, username, money, join_date
                 FROM players""")
-                system("cls")
                 temp = f'Player list:\n'
                 for id, name, money, join_date in cur.fetchall():
                     temp += f'{id} : {name}, Balance ({money})    JOINED: {join_date}\n'
-                temp += "\nPress Enter when done"
                 print(temp)
-                input()
+                input("\nPress Enter when done\n")
                 break
             elif command == "add player":
-                system("cls")
                 name = input("Name of the player:\n").strip().capitalize()
                 temp = datetime.datetime.now()
                 date = f'{temp.year}-{temp.month}-{temp.day}'
@@ -68,14 +64,31 @@ def main():
             elif command == "quit":
                 state = False
                 break
-            elif command == "delete player":
-                system("cls")
+            elif command == "restart player":
                 name = input("Name of the player:\n").strip().capitalize()
-                cur.execute("DELETE FROM players WHERE username = %s", (name,))
+                cur.execute("UPDATE players SET money = 500 WHERE username = %s", (name,))
                 conn.commit()
                 print("SUCCESSFUL")
                 input("\nPress Enter when done\n")
                 break
+            elif command == "replays":
+                cur.execute("""
+                SELECT p.username, tp.table_id, game_date
+                FROM table_record as tr INNER JOIN table_player_id_record as tp ON (tr.table_id = tp.table_id) 
+                    INNER JOIN players as p ON (tp.user_id = p.user_id)
+                ORDER BY game_date DESC 
+                """)
+                temp = f'Game records (username, Table_id, Date):\n'
+                for username, table_id, date in cur.fetchall():
+                    temp += f'{username} : {table_id}   PLAYED: {date}'
+                print(temp)
+                state = input("\nEnter a table_id you want to look at, or else Enter when done\n")
+                if state == "":
+                    break
+                # TODO: Finish this command
+            else:
+                print("Welcome to the BlackJack game! (If you are stuck, write help)")
+
 
     cur.close()
     conn.close()
