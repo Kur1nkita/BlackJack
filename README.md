@@ -7,3 +7,6 @@ Key features "Work in progress":
 - Save previous board records, and the ability to display them.
 - Database of players and their amount of money.
 - Support for unlimited amount of splits.
+
+Maybe future features:
+- Add insurance option
