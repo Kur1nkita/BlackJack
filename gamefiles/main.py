@@ -22,7 +22,7 @@ def main():
             command = input().strip().lower()
             system("cls")
             if command == "help":
-                # TODO: replays, replay player, play
+                # TODO: replays, replay player, reset, play
                 print("Commands:\n"
                       "play : starts the BlackJack game\n"
                       "players : Shows all the players in the database\n"
@@ -30,6 +30,7 @@ def main():
                       "restart player : restarts a player balance\n"
                       "replays : shows a list of previous games\n"
                       "replay player : show a list of replays from a spesific player\n"
+                      "reset : resets the database and removes everything\n"
                       "quit : quits the game")
                 input("\nPress Enter when done\n")
                 break
