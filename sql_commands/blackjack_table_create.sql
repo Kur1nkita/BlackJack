@@ -14,7 +14,7 @@ CREATE TABLE table_record (
 CREATE TABLE table_player_id_record (
     user_id int UNIQUE ,
     table_id int UNIQUE ,
-    PRIMARY KEY (user_id, table_id),
-    FOREIGN KEY (user_id) REFERENCES players (user_id),
+    PRIMARY KEY (user_id, table_id) ,
+    FOREIGN KEY (user_id) REFERENCES players (user_id) ON DELETE CASCADE ,
     FOREIGN KEY (table_id) REFERENCES table_record (table_id)
 );

@@ -6,6 +6,10 @@ from os import system
 import psycopg2
 
 
+def convert_data_to_metadata(data: int) -> tuple[list]:
+    ...
+
+
 def main():
     conn = psycopg2.connect(host="localhost", dbname="postgres", user="postgres", password="123")
     cur = conn.cursor()
@@ -18,13 +22,15 @@ def main():
             command = input().strip().lower()
             if command == "help":
                 system("cls")
+                # TODO: replays, replay player, play
                 print("Commands:\n"
+                      "play : starts the BlackJack game\n"
                       "players : Shows all the players in the database\n"
                       "add player : adds a player to the database\n"
-                      "remove player : removes a player from the database\n"
+                      "delete player : removes a player from the database\n"
                       "restart player : restarts a player balance\n"
-                      "play : starts the BlackJack game\n"
                       "replays : shows a list of previous games\n"
+                      "replay player : show a list of replays from a spesific player\n"
                       "quit : quits the game")
                 input("\nPress Enter when done\n")
                 break
@@ -42,7 +48,7 @@ def main():
                 break
             elif command == "add player":
                 system("cls")
-                name = input("Name of the player:\n").strip()
+                name = input("Name of the player:\n").strip().capitalize()
                 temp = datetime.datetime.now()
                 date = f'{temp.year}-{temp.month}-{temp.day}'
                 try:
@@ -62,9 +68,19 @@ def main():
             elif command == "quit":
                 state = False
                 break
+            elif command == "delete player":
+                system("cls")
+                name = input("Name of the player:\n").strip().capitalize()
+                cur.execute("DELETE FROM players WHERE username = %s", (name,))
+                conn.commit()
+                print("SUCCESSFUL")
+                input("\nPress Enter when done\n")
+                break
+
     cur.close()
     conn.close()
     system("cls")
+
 
 if __name__ == "__main__":
     main()
