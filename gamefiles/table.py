@@ -1,5 +1,7 @@
-from gamefiles.player import Player
-from gamefiles.deck import Deck
+import time
+from player import Player
+from deck import Deck
+from os import system
 import datetime
 
 
@@ -76,11 +78,11 @@ def check_bet(bet: list) -> str:
 
 
 class Table:
-    def __init__(self, players: list[Player], hands=None, bets=None, date=None):
+    def __init__(self, players: list[Player], hands=None, bets=None, deck=Deck(), date=None):
         if hands is None:
             hands = []
         self.players = players
-        self.deck = Deck()
+        self.deck = deck
         self.hands = hands
         self.bets = bets
         self.date = date
@@ -89,6 +91,7 @@ class Table:
             self.date = f'{temp.year}-{temp.month}-{temp.day}'
 
     def __str__(self):
+        system("cls")
         dealer_value = calculate_hand(self.hands[-1])
         temp = (f'Playdate: {self.date}\n\n'
                 f'Dealer Hand: {self.hands[-1]} ({dealer_value[0]})')
@@ -102,7 +105,7 @@ class Table:
         y2 = 0
         for x in self.hands[:-1]:
             if x is None:
-                temp += f'\n{self.players[i].getName()}\n'
+                temp += f'\nSeat {i+1} "{self.players[i].getName()}"\n'
                 i += 1
                 y = 0
                 continue
@@ -130,18 +133,24 @@ class Table:
         temp_hands[-1].append(self.deck.getCard())
         for x in temp_hands[:-1]:
             x[0].append(self.deck.getCard())
-        temp_hands[-1].append(self.deck.getCard())
 
         hand_count = 0
         print()
         for x, player_hand in enumerate(temp_hands[:-1]):
-            print(f"\nDealer Hand: ['{temp_hands[-1][0]}', 'X'] ({calculate_hand(temp_hands[-1][0])[0]})\n")
-            print(f'{self.players[x].getName()} Money: {self.players[x].getMoney()}\n')
-            i = 1
+            system("cls")
             count = 1
+            dealer_calculated = calculate_hand(temp_hands[-1])
+            dealer_hand_str = f"\nDealer Hand: {temp_hands[-1]} ({dealer_calculated[0]}"
+            if dealer_calculated[0] != dealer_calculated[2]:
+                dealer_hand_str += f'/{dealer_calculated[2]}'
+            dealer_hand_str += f')\n'
+            print(dealer_hand_str)
+            print(f'Seat {hand_count + 1} "{self.players[x].getName()}" Money: {self.players[x].getMoney()}\n')
+            i = 1
             while i > 0:
                 hand = player_hand[count - 1]
                 state = True
+                sleep_state = False
                 while state:
                     calculated = calculate_hand(hand)
                     length = len(hand)
@@ -149,16 +158,20 @@ class Table:
                         print("BUST")
                         hand_count += 1
                         count += 1
+                        sleep_state = True
                         break
                     if length == 2 and calculated[0] == 21:
                         print("BLACKJACK")
                         hand_count += 1
                         count += 1
+                        sleep_state = True
                         break
                     if calculated[0] == 21:
                         print("PERFECT")
                         hand_count += 1
                         count += 1
+                        sleep_state = True
+                        break
                     command = "Hit, Stand"
                     if length == 2 and (hand[0] == hand[1] or (
                             hand[0] in ["K", "Q", "J", "10"] and hand[1] in ["K", "Q", "J", "10"])) \
@@ -178,6 +191,7 @@ class Table:
                         answer = input().lower().strip()
                         if answer == "stand":
                             state = False
+                            sleep_state = True
                             break
                         if answer == "split":
                             self.bets.insert(hand_count, [self.bets[hand_count - 1][0], False])
@@ -195,6 +209,7 @@ class Table:
                             self.bets[hand_count - 1][0] *= 2
                             self.bets[hand_count - 1][1] = True
                             hand.append(self.deck.getCard())
+                            sleep_state = True
                             break
                         elif answer == "hit":
                             hand.append(self.deck.getCard())
@@ -204,15 +219,18 @@ class Table:
                         else:
                             print("Not a command")
                 print(f'Hand {count-1}: (Bet: {self.bets[hand_count-1][0]}) {hand} ({calculate_hand(hand)[0]})\n')
+                if sleep_state:
+                    time.sleep(1)
                 i -= 1
-        print("\nDealer Round")
+        system("cls")
+        print('\n"Dealer Round"')
         while True:
             calculated = calculate_hand(temp_hands[-1])
             temp = f'Dealer Hand: {temp_hands[-1]} ({calculated[0]}'
             if calculated[0] != calculated[2]:
                 temp += f'/{calculated[2]}'
             temp += f')'
-            print(temp)
+            print(temp, end="\r")
             if calculated[0] > 21 and calculated[2] > 21:
                 print("BUST")
                 break
@@ -221,16 +239,16 @@ class Table:
                 break
             if calculated[0] < 17 and calculated[1] < 17:
                 temp_hands[-1].append(self.deck.getCard())
+                time.sleep(1.5)
             else:
                 break
-        print("\n")
 
         for x in temp_hands[:-1]:
             self.hands.append(None)
             for y in x:
                 self.hands.append(y)
         self.hands.append(temp_hands[-1])
-        print("RESULTS:")
+        time.sleep(1.5)
         print(self)
 
         dealer_value = calculate_hand(self.hands[-1])
@@ -244,3 +262,5 @@ class Table:
             reward = calculate_win(check_condition(dealer_value, calculated), calculated, self.bets[y])
             self.players[i].money += reward
             y += 1
+
+# TODO: Edit dealer second card. Should be EU rules. No second card

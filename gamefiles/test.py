@@ -17,11 +17,14 @@
 # cur.close()
 # conn.close()
 
-from gamefiles.table import Table
-from gamefiles.player import Player
+from table import Table
+from player import Player
+from deck import Deck
 
-table = Table([Player(1, "Emil", 500), Player(2, "Emily", 500)],
+player1 = Player(1, "Dumbass", 500)
+player2 = Player(2, "Dumbass2", 500)
+deck = Deck()
+
+table = Table([player1, player2],
               bets=[[100, False], [100, False]])
 table.game_start()
-for x in table.players:
-    print(x.getMoney())

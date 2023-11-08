@@ -1,12 +1,8 @@
 CREATE TABLE players (
     user_id serial PRIMARY KEY ,
-    username varchar(50) NOT NULL UNIQUE
-);
-
-CREATE TABLE player_money (
-    user_id int PRIMARY KEY ,
+    username varchar(50) NOT NULL UNIQUE ,
     money int NOT NULL ,
-    FOREIGN KEY (user_id) REFERENCES players (user_id)
+    join_date date NOT NULL
 );
 
 CREATE TABLE table_record (
