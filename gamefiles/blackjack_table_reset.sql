@@ -1,3 +1,8 @@
+DROP TABLE IF EXISTS table_player_id_record;
+DROP TABLE IF EXISTS table_record;
+DROP TABLE IF EXISTS players;
+
+
 CREATE TABLE players (
     user_id serial PRIMARY KEY ,
     username varchar(50) NOT NULL UNIQUE ,

@@ -78,7 +78,7 @@ def check_bet(bet: list) -> str:
 
 
 class Table:
-    def __init__(self, players: list[Player], hands=None, bets=None, deck=Deck(), date=None):
+    def __init__(self, players: list[Player], bets=None, hands=None, date=None,deck=Deck()):
         if hands is None:
             hands = []
         self.players = players
@@ -120,6 +120,9 @@ class Table:
             y += 1
             y2 += 1
         return temp
+
+    def get_data(self):
+        return self.players, self.bets, self.hands, self.date
 
     def game_start(self):
         temp_hands = []
